@@ -1,0 +1,73 @@
+<!-- views/forgot-password.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Recovery</title>
+  <style>
+    /* Add your CSS styles here */
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Password Recovery</h2>
+    <p>Enter your email below to receive a password reset link.</p>
+    <form id="passwordRecoveryForm" action="/forgot-password" method="POST">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <button type="submit">Reset Password</button>
+    </form>
+    <div id="message"></div> <!-- Feedback message will be displayed here -->
+  </div>
+  <script>
+    // JavaScript code to handle form submission and display feedback messages
+    const form = document.getElementById('passwordRecoveryForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+
+      try {
+        const response = await fetch('/forgot-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        document.getElementById('message').innerHTML = `<p>${data.message}</p>`;
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('message').innerHTML = '<p>Error sending password reset email.</p>';
+      }
+    });
+  </script>
+</body>
+</html>
